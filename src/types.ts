@@ -28,7 +28,7 @@ export interface Ad {
   link: string;
   position: 'sidebar' | 'top' | 'bottom' | 'popup';
   isActive: boolean;
-  createdAt: any;
+  createdAt?: any;
 }
 
 export interface MenuItem {

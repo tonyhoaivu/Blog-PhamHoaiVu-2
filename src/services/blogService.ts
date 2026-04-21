@@ -88,6 +88,18 @@ export const BlogService = {
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category));
   },
 
+  async createCategory(cat: Omit<Category, 'id'>) {
+    return addDoc(collection(db, CATS_COL), cat);
+  },
+
+  async updateCategory(id: string, updates: Partial<Category>) {
+    return updateDoc(doc(db, CATS_COL, id), updates);
+  },
+
+  async deleteCategory(id: string) {
+    return deleteDoc(doc(db, CATS_COL, id));
+  },
+
   // Ads
   async getAds(position?: Ad['position']) {
     let q = query(collection(db, ADS_COL), where('isActive', '==', true));
@@ -98,11 +110,44 @@ export const BlogService = {
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Ad));
   },
 
+  async getAllAds() {
+    const q = query(collection(db, ADS_COL), orderBy('title', 'asc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Ad));
+  },
+
+  async createAd(ad: Omit<Ad, 'id' | 'createdAt'>) {
+    return addDoc(collection(db, ADS_COL), {
+      ...ad,
+      createdAt: serverTimestamp()
+    });
+  },
+
+  async updateAd(id: string, updates: Partial<Ad>) {
+    return updateDoc(doc(db, ADS_COL, id), updates);
+  },
+
+  async deleteAd(id: string) {
+    return deleteDoc(doc(db, ADS_COL, id));
+  },
+
   // Menu
   async getMenuItems() {
     const q = query(collection(db, MENU_COL), orderBy('order', 'asc'));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MenuItem));
+  },
+
+  async createMenuItem(item: Omit<MenuItem, 'id'>) {
+    return addDoc(collection(db, MENU_COL), item);
+  },
+
+  async updateMenuItem(id: string, updates: Partial<MenuItem>) {
+    return updateDoc(doc(db, MENU_COL, id), updates);
+  },
+
+  async deleteMenuItem(id: string) {
+    return deleteDoc(doc(db, MENU_COL, id));
   },
 
   // Settings
@@ -113,10 +158,14 @@ export const BlogService = {
       return docSnap.data() as SiteSettings;
     }
     return {
-      siteName: 'Trực Blog',
-      description: 'Thủ thuật blogspot, game, phim...',
+      siteName: 'Phạm Hoài Vũ',
+      description: 'Chia sẻ kiến thức & thủ thuật',
       logo: '',
-      footerText: '© 2026 Trực Blog'
+      footerText: '© 2026 Phạm Hoài Vũ'
     };
+  },
+
+  async updateSettings(updates: SiteSettings) {
+    return updateDoc(doc(db, SETTINGS_COL, 'site'), updates as any);
   }
 };

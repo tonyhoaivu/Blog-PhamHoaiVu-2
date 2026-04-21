@@ -26,78 +26,39 @@ export default function FeaturedSlider() {
   const current = posts[currentIndex];
 
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-2xl group">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.6 }}
-          className="absolute inset-0"
-        >
-          <img 
-            src={current.thumbnail || 'https://picsum.photos/seed/blog/1920/1080'} 
-            alt={current.title}
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
-          
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 text-white">
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="flex items-center gap-3 mb-3 text-sm font-medium">
-                <span className="px-2 py-1 bg-brand rounded-md uppercase tracking-wider text-[10px]">
-                  Nổi bật
-                </span>
-                <span className="flex items-center gap-1 opacity-80">
-                  <Clock size={14} />
-                  {current.createdAt?.seconds ? format(new Date(current.createdAt.seconds * 1000), 'dd/MM/yyyy') : 'Mới'}
-                </span>
-              </div>
-              <h2 className="text-2xl md:text-4xl font-display font-bold mb-4 max-w-3xl leading-tight">
-                <Link to={`/p/${current.slug}`} className="hover:text-brand transition-colors">
-                  {current.title}
-                </Link>
-              </h2>
-              <p className="text-white/70 line-clamp-2 max-w-2xl mb-6">
-                {current.excerpt}
-              </p>
-              <Link 
-                to={`/p/${current.slug}`}
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-black font-semibold rounded-full hover:bg-brand hover:text-white transition-all transform hover:scale-105"
-              >
-                Đọc ngay
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-[400px]">
+      {/* Featured Big */}
+      <div className="relative group overflow-hidden rounded-sm blogspot-card">
+        <img 
+          src={posts[0]?.thumbnail || 'https://picsum.photos/seed/featured/800/600'} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4 text-white">
+          <Link to={`/p/${posts[0]?.slug}`} className="text-sm font-bold leading-tight hover:text-brand-light transition-colors line-clamp-2">
+            {posts[0]?.title || 'Youtube Vanced chặn quảng cáo chạy nhạc nền'}
+          </Link>
+          <p className="text-[10px] text-white/60 mt-1 uppercase font-bold">Jan 01, 2024</p>
+        </div>
+      </div>
+
+      {/* Grid Small */}
+      <div className="grid grid-cols-2 gap-2">
+        {posts.slice(1, 4).concat([{} as any, {} as any, {} as any]).slice(0, 4).map((post, i) => (
+          <div key={post.id || i} className="relative group overflow-hidden rounded-sm blogspot-card">
+            <img 
+              src={post.thumbnail || `https://picsum.photos/seed/p${i}/400/300`} 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+            <div className="absolute bottom-2 left-2 right-2 text-white">
+              <Link to={`/p/${post.slug}`} className="text-[10px] font-bold line-clamp-2 leading-tight">
+                {post.title || 'Bài viết nổi bật ' + (i + 1)}
               </Link>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
-      </AnimatePresence>
-
-      <button 
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20"
-      >
-        <ChevronLeft size={24} />
-      </button>
-      <button 
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20"
-      >
-        <ChevronRight size={24} />
-      </button>
-
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {posts.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentIndex(idx)}
-            className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-4' : 'bg-white/40'}`}
-          />
         ))}
       </div>
     </div>
