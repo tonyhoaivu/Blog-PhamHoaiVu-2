@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Settings & Menu (Publicly readable, admin writable)
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn(); // Simplified for now, in real app check for admin role
+    }
+    
+    match /menuItems/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /categories/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /ads/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+  }
+}

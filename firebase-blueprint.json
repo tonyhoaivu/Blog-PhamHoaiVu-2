@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "posts": {
+      "title": "Post",
+      "description": "A blog post article",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "content": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "thumbnail": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "views": { "type": "number" },
+        "isFeatured": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["draft", "published"] }
+      },
+      "required": ["title", "slug", "content", "authorId", "createdAt"]
+    },
+    "categories": {
+      "title": "Category",
+      "description": "Post category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "slug"]
+    },
+    "ads": {
+      "title": "Advertisement",
+      "description": "Ad banners",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "link": { "type": "string" },
+        "position": { "type": "string", "enum": ["sidebar", "top", "bottom", "popup"] },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "imageUrl", "link"]
+    },
+    "menuItems": {
+      "title": "Menu Item",
+      "description": "Navigation links",
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "link": { "type": "string" },
+        "order": { "type": "number" },
+        "parentId": { "type": "string" }
+      },
+      "required": ["label", "link", "order"]
+    },
+    "settings": {
+      "title": "Site Settings",
+      "description": "Global blog configuration",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string" },
+        "description": { "type": "string" },
+        "logo": { "type": "string" },
+        "footerText": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "posts": {
+      "schema": "posts",
+      "description": "Main blog articles"
+    },
+    "categories": {
+      "schema": "categories",
+      "description": "Article categories"
+    },
+    "ads": {
+      "schema": "ads",
+      "description": "Promotional banners"
+    },
+    "menuItems": {
+      "schema": "menuItems",
+      "description": "Site navigation mapping"
+    },
+    "settings": {
+      "schema": "settings",
+      "description": "Generic configuration"
+    }
+  }
+}
